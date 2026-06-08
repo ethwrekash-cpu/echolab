@@ -185,15 +185,18 @@ h2 {
 
 .workspace-grid {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr) 380px;
+  grid-template-columns: minmax(0, 1fr) 360px;
   gap: 12px;
   align-items: start;
 }
 
-.map-panel,
 .room-panel,
 .control-panel {
   padding: 13px;
+}
+
+.map-panel {
+  display: none;
 }
 
 .map-list,
@@ -309,7 +312,7 @@ h2 {
 }
 
 .room-plan {
-  min-height: 460px;
+  min-height: 320px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #f4f4f1;
@@ -319,7 +322,7 @@ h2 {
 .room-plan svg {
   display: block;
   width: 100%;
-  min-height: 460px;
+  min-height: 320px;
 }
 
 .control-panel {
@@ -373,7 +376,7 @@ h2 {
 }
 
 .voice-meter {
-  display: flex;
+  display: none;
   gap: 5px;
   height: 18px;
   align-items: end;
@@ -411,6 +414,10 @@ h2 {
 
 .text-command-form[hidden] {
   display: none;
+}
+
+.text-command-form {
+  margin-top: 4px;
 }
 
 .text-command-form label {
@@ -556,7 +563,7 @@ h2 {
 
 .bottom-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 380px;
+  grid-template-columns: minmax(0, 1fr) 360px;
   gap: 12px;
   align-items: start;
 }
