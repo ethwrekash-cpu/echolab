@@ -11,9 +11,9 @@
       <section class="quest-app" aria-labelledby="quest-title">
         <header class="app-header">
           <div>
-            <p class="eyebrow">голосовой квест</p>
+            <p class="eyebrow">квест</p>
             <h1 id="quest-title">Лаборатория Эха</h1>
-            <p class="brief">Ночной оператор восстанавливает связь комплекса ЭХО до блокировки ядра.</p>
+            <p class="brief">Выполняйте задачи в комнате и переходите дальше. Можно говорить голосом или использовать подсказки.</p>
           </div>
 
           <div class="header-actions">
@@ -23,9 +23,9 @@
         </header>
 
         <div class="workspace-grid">
-          <aside class="map-panel" aria-label="Карта комплекса">
+          <aside class="map-panel" aria-label="Маршрут">
             <div class="panel-head">
-              <p class="eyebrow">Карта комплекса</p>
+              <p class="eyebrow">Маршрут</p>
               <button id="where-button" class="ghost-button" type="button">Где я?</button>
             </div>
             <ol id="map-list" class="map-list"></ol>
@@ -50,7 +50,7 @@
 
           <aside class="control-panel" aria-label="Голосовое управление">
             <section class="voice-card">
-              <p class="eyebrow">Голосовое управление</p>
+              <p class="eyebrow">Команда</p>
               <button id="mic-button" class="mic-button" type="button">
                 <span class="mic-dot" aria-hidden="true"></span>
                 <span id="mic-label">Слушать</span>
@@ -58,14 +58,14 @@
               <p id="speech-help" class="speech-help"></p>
               <div class="voice-meter" aria-hidden="true"><span></span><span></span><span></span></div>
               <form id="text-command-form" class="text-command-form" aria-label="Тестовый ввод команды">
-                <label for="text-command">Тестовая команда</label>
+                <label for="text-command">Введите команду</label>
                 <div>
-                  <input id="text-command" type="text" autocomplete="off" placeholder="например: открой проход в архив" />
+                  <input id="text-command" type="text" autocomplete="off" placeholder="например: взять пропуск" />
                   <button type="submit">Выполнить</button>
                 </div>
               </form>
-              <p id="last-command" class="last-command">Распознано: пока нет</p>
-              <details class="voice-settings">
+              <p id="last-command" class="last-command">Команда: пока нет</p>
+              <details class="voice-settings" hidden>
                 <summary>Настройки диктора</summary>
                 <label>
                   Громкость
@@ -81,7 +81,7 @@
 
             <section class="task-card">
               <div class="panel-head">
-                <p class="eyebrow">Задачи комнаты</p>
+                <p class="eyebrow">Что сделать</p>
                 <button id="remaining-button" class="ghost-button" type="button">Что осталось?</button>
               </div>
               <ul id="task-list" class="task-list"></ul>
@@ -89,7 +89,7 @@
 
             <section class="task-card">
               <div class="panel-head">
-                <p class="eyebrow">Навигация</p>
+                <p class="eyebrow">Дальше</p>
                 <button id="next-button" class="ghost-button" type="button">Куда идти?</button>
               </div>
               <p id="next-step" class="next-step"></p>
@@ -102,10 +102,10 @@
           </aside>
         </div>
 
-        <section id="demo-panel" class="demo-panel" aria-label="Режим защиты" hidden>
+        <section id="demo-panel" class="demo-panel" aria-label="Подсказки" hidden>
           <div>
-            <p class="eyebrow">Режим защиты</p>
-            <h2>Интенты и примеры фраз</h2>
+            <p class="eyebrow">Подсказки</p>
+            <h2>Примеры команд</h2>
           </div>
           <div id="demo-command-list" class="demo-command-list"></div>
         </section>
@@ -114,12 +114,12 @@
           <section class="session-panel" aria-label="Управление сессией">
             <div class="panel-head">
               <div>
-                <p class="eyebrow">Сессия</p>
-                <h2>Управление прохождением</h2>
+                <p class="eyebrow">Игра</p>
+                <h2>Прогресс сохранится автоматически</h2>
               </div>
               <button id="reset-button" class="plain-button" type="button">Начать заново</button>
             </div>
-            <p class="session-note">Прогресс сохраняется в браузере. Команда «повтори» озвучит последний ответ системы. Новая игра запускается только этой кнопкой.</p>
+            <p class="session-note">Если что-то пошло не так, начните заново кнопкой справа. Голосом игра не перезапускается.</p>
           </section>
 
           <section id="result-panel" class="result-panel" aria-label="Итоги прохождения" hidden>
