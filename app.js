@@ -340,7 +340,7 @@ function setupSpeechRecognition() {
 
   setVoiceStatus("Микрофон выключен", "warning");
   dom.micLabel.textContent = "Включить микрофон";
-  dom.speechHelp.textContent = "Нажмите один раз, разрешите микрофон и говорите короткими фразами. Если браузер снова спрашивает доступ, откройте страницу через http://localhost и сохраните разрешение в значке замка у адреса.";
+  dom.speechHelp.textContent = "Нажмите один раз, разрешите микрофон и говорите короткими фразами.";
 }
 
 function startRecognitionSession() {
