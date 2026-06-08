@@ -11,7 +11,7 @@ const rooms = {
     story:
       "Система ЭХО потеряла внешний сигнал. Архив закрыт, но рядом с пультом лежит пропуск дежурного оператора.",
     next: "archive",
-    nextText: "После подтверждения доступа откроется архив.",
+    nextText: "Выполните задачи и скажите: «дальше»."
     demo: ["где я", "что осталось", "осмотреться", "осмотреть пульт", "взять пропуск", "показать пропуск", "открыть дверь", "дальше"],
     tasks: [
       { id: "passTaken", text: "Пропуск найден", missing: "взять пропуск", done: (s) => hasItem(s, "пропуск"), required: true },
@@ -24,7 +24,7 @@ const rooms = {
     story:
       "На столе лежит диктофон с записью инженера и архивный модуль. Без этих данных следующий отсек бесполезен.",
     next: "server",
-    nextText: "Серверная сможет восстановить отчет, если у вас есть архивный модуль.",
+    nextText: "Когда задачи выполнены, скажите: «идти в серверную»."
     demo: ["осмотреть стол", "прослушать запись и взять архивный модуль", "что осталось", "идти в серверную"],
     tasks: [
       { id: "recordHeard", text: "Запись прослушана", missing: "прослушать запись", done: (s) => s.flags.recordHeard, required: true },
@@ -37,7 +37,7 @@ const rooms = {
     story:
       "Центральная стойка просит модуль архива. Отчет должен объяснить, почему сорвался портал.",
     next: "generator",
-    nextText: "После расшифровки отчета можно возвращать питание.",
+    nextText: "Когда задачи выполнены, скажите: «идти к генератору»."
     demo: ["осмотреть стойку", "вставить модуль и расшифровать отчет", "куда идти", "идти к генератору"],
     tasks: [
       { id: "moduleInserted", text: "Модуль вставлен в стойку", missing: "вставить архивный модуль в стойку", done: (s) => s.flags.moduleInserted, required: true },
@@ -50,8 +50,8 @@ const rooms = {
     story:
       "Генератор отключен. Терминал требует пропуск, а шкала частоты сбита после аварии.",
     next: "lab",
-    nextText: "Лифт в лабораторию включится только после запуска генератора.",
-    demo: ["осмотреть генератор", "использовать пропуск затем настроить частоту и включить генератор", "идти в лабораторию"],
+    nextText: "Когда генератор запущен, скажите: «идти в лабораторию»."
+    demo: ["осмотреть генератор", "использовать пропуск", "настроить частоту", "включить генератор", "идти в лабораторию"]
     tasks: [
       { id: "passInserted", text: "Терминал разблокирован пропуском", missing: "использовать пропуск на терминале", done: (s) => s.flags.passInserted, required: true },
       { id: "frequencySet", text: "Частота выставлена на 42 Гц", missing: "настроить частоту генератора", done: (s) => s.flags.frequencySet, required: true },
@@ -64,7 +64,7 @@ const rooms = {
     story:
       "Отчет указывает на перегрев и рассинхронизацию. В лаборатории остались стабилизатор и панель охлаждения.",
     next: "observatory",
-    nextText: "Поднимайтесь в обсерваторию только после подготовки портала.",
+    nextText: "Когда задачи выполнены, скажите: «идти в обсерваторию»."
     demo: ["осмотреть лабораторию", "взять стабилизатор и восстановить охлаждение", "что осталось", "идти в обсерваторию"],
     tasks: [
       { id: "stabilizerTaken", text: "Стабилизатор взят", missing: "взять стабилизатор", done: (s) => hasItem(s, "стабилизатор"), required: true },
@@ -77,7 +77,7 @@ const rooms = {
     story:
       "Антенна ЭХО смотрит в небо. Консоль ждет кристалл памяти и решение оператора.",
     next: "finale",
-    nextText: "Подготовьте кристалл и антенну, затем выберите финальный протокол.",
+    nextText: "Подготовьте кристалл и антенну. Затем скажите: «запустить портал» или «эвакуироваться»."
     demo: ["осмотреть консоль", "что нужно для запуска", "взять кристалл и синхронизировать антенну", "запусти портал", "отправить сигнал", "эвакуироваться", "аварийный запуск"],
     tasks: [
       { id: "crystalTaken", text: "Кристалл памяти взят", missing: "взять кристалл памяти", done: (s) => hasItem(s, "кристалл памяти"), required: true },
@@ -289,7 +289,7 @@ function addItem(item) {
 function setupSpeechRecognition() {
   if (!SpeechRecognition) {
     setVoiceStatus("Голос недоступен", "warning");
-    dom.speechHelp.textContent = "Браузер не дал доступ к Web Speech API. Для демонстрации включите скрытый режим Ctrl+Shift+D или откройте проект в Chrome.";
+    dom.speechHelp.textContent = "Голос недоступен в этом браузере. Используйте поле ввода или откройте игру в Chrome.";
     dom.micButton.disabled = true;
     dom.micLabel.textContent = "Недоступно";
     return;
@@ -305,7 +305,7 @@ function setupSpeechRecognition() {
     isListening = true;
     dom.micButton.classList.add("is-listening");
     dom.micLabel.textContent = "Остановить";
-    setVoiceStatus("Слушаю постоянно", "ready");
+    setVoiceStatus("Слушаю", "ready");
   });
 
   recognition.addEventListener("end", () => {
@@ -341,7 +341,7 @@ function setupSpeechRecognition() {
 
   setVoiceStatus("Микрофон выключен", "warning");
   dom.micLabel.textContent = "Включить микрофон";
-  dom.speechHelp.textContent = "Нажмите один раз, разрешите микрофон и говорите короткими фразами.";
+  dom.speechHelp.textContent = "Нажмите микрофон и скажите короткую команду: «осмотреться», «взять пропуск», «дальше».";
 }
 
 function startRecognitionSession() {
@@ -410,7 +410,7 @@ function handleCommandPreview(command) {
   if (hasAny(command, words.repeat) || hasAny(command, words.help) || hasAny(command, words.where) || hasAny(command, words.remaining) || hasAny(command, words.next) || hasAny(command, words.inventory) || hasAny(command, words.stats)) return true;
   if (isFinaleRoom(state.room)) return false;
   const handler = roomPreviewHandlers[state.room];
-  return Boolean((handler && handler(command)) || hasAny(command, words.inspect) || getTargetRoom(command));
+  return Boolean((handler && handler(command)) || hasAny(command, words.inspect) || (isNavigationIntent(command) && (getTargetRoom(command) || getImplicitNextRoom(command))));
 }
 
 function getSpeechErrorMessage(error) {
@@ -438,8 +438,8 @@ function runCommand(rawCommand, source = "voice") {
 
   const parts = splitCommandChain(rawCommand);
   const visibleCommand = parts.length > 1 ? parts.join(" → ") : rawCommand;
-  dom.lastCommand.textContent = `Распознано: ${visibleCommand}`;
-  setVoiceStatus(parts.length > 1 ? "Цепочка принята" : "Команда принята", "ready");
+  dom.lastCommand.textContent = `Команда: ${visibleCommand}`;
+  setVoiceStatus(parts.length > 1 ? "Принято" : "Принято", "ready");
 
   for (let index = 0; index < parts.length; index += 1) {
     const shouldContinue = runSingleCommand(parts[index], source, { silentStats: index > 0 });
@@ -488,7 +488,7 @@ function splitCommandChain(rawCommand) {
   if (!normalized) return [];
 
   const quickChain = extractKnownActionChain(normalized);
-  if (quickChain.length > 1) return quickChain.slice(0, 5);
+  if (quickChain.length) return quickChain.slice(0, 5);
 
   const protectedCommand = protectKnownPhrases(normalized);
   const parts = protectedCommand
@@ -504,7 +504,7 @@ function extractKnownActionChain(command) {
   const patterns = [
     { pattern: /(осмотреться|осмотри комнату|осмотреть комнату)/u, command: "осмотреться" },
     { pattern: /(взять|забрать|подобрать|поднять)\s+(пропуск|карту|карточку|бейдж|идентификатор)/u, command: "взять пропуск" },
-    { pattern: /(открыть|открой|разблокировать|приложить|показать|использовать)\s+(дверь|архив|проход|пропуск|карту|бейдж)/u, command: "открыть архив" },
+    { pattern: /(открыть|открой|разблокировать|приложить|показать|использовать)\s+(дверь|архив|проход|пропуск|карту|бейдж)/u, command: "показать пропуск" },
     { pattern: /(прослушать|послушать|включить|воспроизвести)\s+(запись|диктофон|аудио)/u, command: "прослушать запись" },
     { pattern: /(взять|забрать|подобрать)\s+(архивный\s+)?(модуль|накопитель|флешку|носитель)/u, command: "взять архивный модуль" },
     { pattern: /(идти|перейти|пойти|пройти)\s+(в\s+)?сервер/u, command: "идти в серверную" },
@@ -516,7 +516,6 @@ function extractKnownActionChain(command) {
     { pattern: /(включить|запустить|активировать)\s+(генератор|питание|турбину)/u, command: "включить генератор" },
     { pattern: /(идти|перейти|пойти|пройти)\s+(в\s+)?лаборатор/u, command: "идти в лабораторию" },
     { pattern: /(взять|забрать|подобрать)\s+стабилизатор/u, command: "взять стабилизатор" },
-    { pattern: /(стабилизатор)/u, command: "взять стабилизатор" },
     { pattern: /(восстановить|починить|наладить)\s+(охлаждение|контур)/u, command: "восстановить охлаждение" },
     { pattern: /(идти|перейти|пойти|пройти)\s+(в\s+)?обсерватор/u, command: "идти в обсерваторию" },
     { pattern: /(взять|забрать|подобрать)\s+(кристалл|память|накопитель)/u, command: "взять кристалл" },
@@ -576,10 +575,10 @@ function finishWith(callback) {
 }
 
 function handleCommand(command) {
+  if (handleNavigation(command)) return true;
   const handler = roomHandlers[state.room];
   if (handler && handler(command)) return true;
   if (hasAny(command, words.inspect)) return inspectCommand(command);
-  if (handleNavigation(command)) return true;
   return false;
 }
 
@@ -600,70 +599,72 @@ function wantsFinalLaunch(command) {
 }
 
 function handleNavigation(command) {
-  if (state.room === "atrium" && !state.flags.archiveOpen && getTargetRoom(command) === "archive") {
-    if (!hasItem(state, "пропуск")) {
-      addLog("Считыватель молчит: рядом на панели лежит идентификатор оператора.", true, "warning");
-      return true;
-    }
-    state.flags.archiveOpen = true;
-    addLog("Пульт принял пропуск. Дверь архива открылась.", true, "success");
-    return true;
+  const navigationIntent = isNavigationIntent(command);
+
+  if (isFinaleRoom(state.room)) {
+    if (navigationIntent) addLog("Квест завершен. Для новой попытки нажмите кнопку «Начать заново».");
+    return navigationIntent;
   }
 
-  if (!hasAny(command, words.go) && !hasAny(command, words.open)) return false;
+  if (!navigationIntent) return false;
 
   const target = getTargetRoom(command) || getImplicitNextRoom(command);
   if (!target) return false;
 
   if (target === state.room) {
-    addLog("Вы уже здесь.");
-    return true;
-  }
-
-  if (isFinaleRoom(state.room)) {
-    addLog("Маршрут уже завершен. Для новой попытки нажмите кнопку «Начать заново».");
+    addLog("Вы уже в этой комнате.");
     return true;
   }
 
   const currentIndex = roomOrder.indexOf(state.room);
   const targetIndex = roomOrder.indexOf(target);
+  const nextRoom = rooms[state.room]?.next || "";
 
   if (targetIndex < currentIndex) {
-    state.room = target;
-    addLog(`Вы возвращаетесь: ${rooms[target].name}.`);
+    addLog(`Назад идти не нужно. Дальше по маршруту: ${nextRoom ? rooms[nextRoom].name : "финальный выбор"}.`, true, "warning");
     return true;
   }
 
-  if (target !== rooms[state.room].next) {
-    addLog(`Маршрут к этой зоне сейчас не открыт. Следующее направление: ${rooms[rooms[state.room].next].name}.`);
+  if (target !== nextRoom) {
+    addLog(`Туда пока нельзя. Дальше по маршруту: ${nextRoom ? rooms[nextRoom].name : "финальный выбор"}.`, true, "warning");
     return true;
   }
 
   const missing = getMissingRequired(state.room);
   if (missing.length) {
-    addLog(`Рано уходить. Осталось: ${missing.join("; ")}.`);
+    addLog(`Сначала завершите задачи комнаты: ${missing.join("; ")}.`, true, "warning");
     return true;
   }
 
-  if (state.room === "atrium") state.flags.archiveOpen = true;
+  if (target === "finale") {
+    addLog("Вы у финального выбора. Скажите: «запустить портал» или «эвакуироваться».", true, "info");
+    return true;
+  }
+
   state.room = target;
-  addLog(`Переход выполнен: ${rooms[target].name}.`, true, "success");
+  addLog(`Вы перешли в комнату: ${rooms[target].name}.`, true, "success");
   return true;
 }
 
+function isNavigationIntent(command) {
+  if (hasAny(command, ["куда идти", "куда дальше", "следующая комната", "следующий шаг", "маршрут"])) return true;
+  if (hasAny(command, ["дальше", "вперед", "продолжить", "следующая", "следующий", "иди дальше", "следуй дальше"])) return true;
+  return hasAny(command, ["идти", "перейти", "пойти", "отправиться", "пройти", "войти", "переместиться", "двигаться", "следовать", "направиться"]);
+}
+
 function getTargetRoom(command) {
-  if (hasAny(command, ["архив", "архива", "архивную", "к архиву", "архивный отсек"])) return "archive";
-  if (hasAny(command, ["сервер", "серверную", "серверная", "к стойке", "машинный зал", "серверный зал"])) return "server";
-  if (hasAny(command, ["генератор", "генераторную", "генераторная", "к питанию", "энергоблок", "энергоузел"])) return "generator";
-  if (hasAny(command, ["лабораторию", "лаборатория", "в лабораторный", "к лифту", "лифт"])) return "lab";
-  if (hasAny(command, ["обсерваторию", "обсерватория", "антенна", "купол", "наверх", "к консоли"])) return "observatory";
-  if (hasAny(command, ["зал", "вход", "назад ко входу", "вестибюль", "атриум"])) return "atrium";
+  if (hasAny(command, ["архив", "архива", "архивную", "к архиву", "в архив"])) return "archive";
+  if (hasAny(command, ["сервер", "серверную", "серверная", "в серверную", "к серверу"])) return "server";
+  if (hasAny(command, ["генераторную", "генераторная", "к генератору", "в генераторную"])) return "generator";
+  if (hasAny(command, ["лабораторию", "лаборатория", "в лабораторию", "к лаборатории"])) return "lab";
+  if (hasAny(command, ["обсерваторию", "обсерватория", "в обсерваторию", "к обсерватории", "наверх"])) return "observatory";
+  if (hasAny(command, ["назад ко входу", "входной зал", "атриум"])) return "atrium";
   return "";
 }
 
 function getImplicitNextRoom(command) {
   if (isFinaleRoom(state.room)) return "";
-  if (!hasAny(command, ["дальше", "вперед", "продолжить", "следующая", "следующий", "проход", "дверь", "выйти", "иди дальше", "следуй дальше"])) return "";
+  if (!hasAny(command, ["дальше", "вперед", "продолжить", "следующая", "следующий", "следующая комната", "следующий шаг", "проход дальше", "иди дальше", "следуй дальше"])) return "";
   return rooms[state.room].next || "";
 }
 
@@ -802,14 +803,13 @@ const roomHandlers = {
       return true;
     }
 
-    if ((hasAny(command, words.use) || hasAny(command, words.open) || hasAny(command, words.go)) && hasAny(command, ["пропуск", "карта", "карточка", "бейдж", "дверь", "архив", "проход", "доступ", "пульт", "считыватель", "дальше", "вперед"])) {
+    if ((hasAny(command, words.use) || hasAny(command, words.open)) && hasAny(command, ["пропуск", "карта", "карточка", "бейдж", "дверь", "архив", "проход", "доступ", "пульт", "считыватель"])) {
       if (!hasItem(state, "пропуск")) {
-        addLog("Считыватель молчит: рядом на панели лежит идентификатор оператора.", true, "warning");
+        addLog("Нужен пропуск. Он лежит рядом с пультом.", true, "warning");
         return true;
       }
       state.flags.archiveOpen = true;
-      state.room = "archive";
-      addLog("Пульт принял пропуск. Дверь архива открылась.", true, "success");
+      addLog("Доступ подтвержден. Теперь можно идти дальше в архив.", true, "success");
       return true;
     }
 
@@ -998,7 +998,7 @@ function describeNextStep() {
 
   const missing = getMissingRequired(state.room);
   if (missing.length) {
-    addLog(`Пока рано идти дальше. Осталось: ${missing.join("; ")}.`);
+    addLog(`Сначала сделайте: ${missing.join("; ")}.`);
     return;
   }
 
@@ -1008,7 +1008,7 @@ function describeNextStep() {
     return;
   }
 
-  addLog(next ? `Следующее направление: ${rooms[next].name}. ${rooms[state.room].nextText}` : "Вы у финального протокола.");
+  addLog(next ? `Дальше: ${rooms[next].name}. ${rooms[state.room].nextText}` : "Вы у финального выбора.");
 }
 
 function describeInventory() {
@@ -1058,8 +1058,8 @@ function getContextualNudge(command) {
         ? "Антенна еще не согласована с каналом ЭХО."
         : "Консоль готова к финальному протоколу.",
   };
-  if (command && hasAny(command, words.go)) return "Маршрут понял, но проход пока требует завершить текущую зону.";
-  return repeated ? nudges[state.room] || "Система не нашла подходящего действия в этой зоне." : "Система не поняла действие. Назовите действие и объект: осмотреть пульт, взять предмет, открыть проход.";
+  if (command && isNavigationIntent(command)) return "Переход пока закрыт. Сначала выполните задачи этой комнаты.";
+  return repeated ? nudges[state.room] || "Здесь нужно другое действие." : "Не понял команду. Попробуйте: осмотреть, взять, использовать, включить или дальше.";
 }
 
 function isFinaleRoom(roomId) {
@@ -1137,6 +1137,7 @@ function finishTurn() {
 }
 
 function render() {
+  if (!allRooms[state.room]) state.room = "atrium";
   const room = allRooms[state.room];
   dom.locationLabel.textContent = room.name;
   dom.sceneTitle.textContent = room.title;
@@ -1152,6 +1153,7 @@ function render() {
 }
 
 function renderMap() {
+  if (!dom.mapList) return;
   const currentIndex = getProgressIndex();
   dom.mapList.innerHTML = "";
   roomOrder.forEach((roomId, index) => {
@@ -1162,12 +1164,12 @@ function renderMap() {
     if (index > currentIndex + 1) li.classList.add("is-locked");
 
     const title = document.createElement("strong");
-    title.textContent = roomId === "finale" ? "Финал" : rooms[roomId].name;
+    title.textContent = roomId === "finale" ? "Финал" : rooms[roomId]?.name || "Комната";
 
     const status = document.createElement("span");
-    if (index < currentIndex) status.textContent = "завершено";
-    else if (index === currentIndex) status.textContent = "текущая зона";
-    else if (index === currentIndex + 1) status.textContent = "следующая зона";
+    if (index < currentIndex) status.textContent = "готово";
+    else if (index === currentIndex) status.textContent = "сейчас";
+    else if (index === currentIndex + 1) status.textContent = "дальше";
     else status.textContent = "закрыто";
 
     li.append(title, status);
@@ -1177,7 +1179,8 @@ function renderMap() {
 
 function getProgressIndex() {
   if (isFinaleRoom(state.room)) return roomOrder.indexOf("finale");
-  return roomOrder.indexOf(state.room);
+  const index = roomOrder.indexOf(state.room);
+  return index >= 0 ? index : 0;
 }
 
 function renderTasks() {
@@ -1187,13 +1190,13 @@ function renderTasks() {
     li.className = "task-item is-done";
     li.textContent = finales[state.room].reason;
     dom.taskList.append(li);
-    dom.roomStatus.textContent = "маршрут завершен";
+    dom.roomStatus.textContent = "финал";
     dom.roomStatus.classList.add("is-complete");
     return;
   }
 
   const complete = isRoomComplete(state.room);
-  dom.roomStatus.textContent = complete ? "комната готова" : "требуется действие";
+  dom.roomStatus.textContent = complete ? "готово" : "есть задачи";
   dom.roomStatus.classList.toggle("is-complete", complete);
 
   rooms[state.room].tasks.forEach((task) => {
@@ -1212,7 +1215,7 @@ function renderNavigation() {
   }
   const missing = getMissingRequired(state.room);
   dom.nextStep.textContent = missing.length
-    ? `Переход вперед заблокирован: ${missing.join("; ")}.`
+    ? `Сначала: ${missing.join("; ")}.`
     : rooms[state.room].nextText;
 }
 
@@ -1231,7 +1234,7 @@ function setDemoMode(enabled, silent = false) {
   state.demoMode = enabled;
   saveGame();
   renderDemo();
-  if (!silent) addLog(state.demoMode ? "Скрытый режим защиты включен." : "Скрытый режим защиты выключен.", false);
+  if (!silent) addLog(state.demoMode ? "Подсказки включены." : "Подсказки скрыты.", false);
 }
 
 function toggleDemoMode() {
@@ -1240,7 +1243,7 @@ function toggleDemoMode() {
 
 function renderDemo() {
   dom.demoPanel.hidden = !state.demoMode;
-  dom.textCommandForm.hidden = !state.demoMode;
+  dom.textCommandForm.hidden = false;
   dom.demoCommandList.innerHTML = "";
 
   const list = isFinaleRoom(state.room) ? finales[state.room].demo : rooms[state.room].demo;
@@ -1419,6 +1422,8 @@ function getFirstSavedLogText(log) {
 }
 
 function resetGame() {
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  stopRecognitionSession();
   const keepDemoMode = state.demoMode;
   const keepSound = state.sound;
   const keepVoice = { ...state.voice };
@@ -1426,7 +1431,7 @@ function resetGame() {
   state.demoMode = keepDemoMode;
   state.sound = keepSound;
   state.voice = keepVoice;
-  dom.lastCommand.textContent = "Распознано: пока нет";
+  dom.lastCommand.textContent = "Команда: пока нет";
   saveGame();
   render();
   speakText("Новая игра началась.");
